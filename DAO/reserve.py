@@ -5,7 +5,7 @@ class Reserve(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     date_out = db.Column(db.Date, unique=False, nullable=False)
-    date_back = db.Column(db.Date, unique=False, nullable=False)
+    date_back = db.Column(db.Date, unique=False, nullable=True)
     client_id = db.Column(db.Integer, db.ForeignKey('clients.id'), nullable=False)
     client = db.relationship('Client', backref=db.backref('reserves'))
     book_id = db.Column(db.Integer, db.ForeignKey('books.id'), nullable=False)
@@ -14,7 +14,7 @@ class Reserve(db.Model):
     def __repr__(self):
         return f'Reserve {self.id}'
 
-    def response():
+    def response(reserve):
         return jsonify({
             'date_out': reserve.date_out,
             'date_back': reserve.date_back,

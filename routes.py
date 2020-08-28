@@ -32,6 +32,20 @@ def book(book_id):
         {'id': book.id, 'title': book.title, 'author': book.author}
     ])
 
+# @app.route("/books/<int:book_id>", methods=["PUT"])
+# def update_book(book_id):
+#     book = Book.query.get(book_id)
+
+#     book.title = request.json['title'] if True else book.title
+#     book.author = request.json['author'] if request.json['author'] else book.author
+
+#     db.session.commit()
+
+#     return book
+#     # return jsonify([
+#     #     {'id': book.id, 'title': book.title, 'author': book.author}
+#     # ])
+
 @app.route("/books/<int:book_id>", methods=["DELETE"])
 def delete_book(book_id):
     book = Book.query.get(book_id)
@@ -39,6 +53,21 @@ def delete_book(book_id):
     db.session.commit()
 
     return jsonify([{'message': "Data deleted"}])
+
+@app.route("/books/<int:book_id>/reserve", methods=["POST"])
+def register_reserves_by_book(book_id):
+    reserve = Reserve(
+        date_out = request.json['date_out'],
+        date_back = request.json["date_back"] if request.json["date_back"] is not None else None,
+        client_id = request.json['client_id'],
+        book_id = book_id
+    )
+
+    db.session.add(reserve)
+    db.session.commit()
+
+    return Reserve.response(reserve)
+
 
 # =============================================== #
 
@@ -80,21 +109,31 @@ def clients_reserves(client_id):
         for reserve in client.reserves
     ])
 
-# =============================================== #
+@app.route("/clients/<int:client_id>/books", methods=["GET"])
+def clients_books(client_id):
+    client = Client.query.get(client_id)
+    
+    return jsonify([
+        { 'title':reserve.book.title, 'author':reserve.book.author, 'date_out': reserve.date_out }
+        for reserve in client.reserves
+    ])
 
+# =============================================== #
 
 @app.route("/reserves", methods=["POST"])
 def register_reserves():
     reserve = Reserve(
         date_out = request.json['date_out'],
-        date_back = request.json['date_back'],
+        date_back = request.json["date_back"] if request.json["date_back"] is not None else None,
         client_id = request.json['client_id'],
         book_id = request.json['book_id']
     )
+
     db.session.add(reserve)
     db.session.commit()
 
     return Reserve.response(reserve)
+
 
 @app.route("/reserves", methods=["GET"])
 def all_reserves():
