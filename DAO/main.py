@@ -1,5 +1,7 @@
 from bootstrap import db
-from DAO.books import Books
+from DAO.book import Book
+from DAO.client import Client
+from DAO.reserve import Reserve
 
 class Main:
 
