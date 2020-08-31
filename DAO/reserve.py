@@ -1,4 +1,5 @@
 from bootstrap import app, db, jsonify
+from datetime import date
 
 class Reserve(db.Model):
     __tablename__ = "reserves"
@@ -21,5 +22,9 @@ class Reserve(db.Model):
             'client_id': reserve.client_id,
             'book_id': reserve.book_id
         })
+
+    def delayDay(reserve):
+        calc =  date.today() - reserve.date_out
+        return calc.days
 
     

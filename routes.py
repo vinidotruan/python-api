@@ -29,7 +29,7 @@ def all_books():
 def book(book_id):
     book = Book.query.get(book_id)
     return jsonify([
-        {'id': book.id, 'title': book.title, 'author': book.author}
+        {'id': book.id, 'title': book.title, 'author': book.author,}
     ])
 
 # @app.route("/books/<int:book_id>", methods=["PUT"])
@@ -114,7 +114,7 @@ def clients_books(client_id):
     client = Client.query.get(client_id)
     
     return jsonify([
-        { 'title':reserve.book.title, 'author':reserve.book.author, 'date_out': reserve.date_out }
+        { 'title':reserve.book.title, 'author':reserve.book.author, 'date_out': reserve.date_out, 'delay': Reserve.delayDay(reserve) }
         for reserve in client.reserves
     ])
 
