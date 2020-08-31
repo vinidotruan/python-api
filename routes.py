@@ -114,7 +114,7 @@ def clients_books(client_id):
     client = Client.query.get(client_id)
     
     return jsonify([
-        { 'title':reserve.book.title, 'author':reserve.book.author, 'date_out': reserve.date_out, 'delay': Reserve.delayDay(reserve) }
+        { 'title':reserve.book.title, 'author':reserve.book.author, 'date_out': reserve.date_out, 'delay': Reserve.delayDay(reserve), 'penality': }
         for reserve in client.reserves
     ])
 
